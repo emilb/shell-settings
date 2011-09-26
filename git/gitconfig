@@ -1,0 +1,21 @@
+[github]
+	user = emilb
+	token = 840d3470526655dd1762f01dcb4a62da
+
+[user]
+	name = Emil Breding
+	email = emil.breding@gmail.com
+
+[alias]
+  st = status
+  ci = commit
+  br = branch
+  co = checkout
+  df = diff
+  lg = log -p
+
+[color]
+  ui = auto
+
+[merge]
+  tool = opendiff

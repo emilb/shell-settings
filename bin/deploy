@@ -1,0 +1,10 @@
+# Create local bin directory
+if [ ! -d ~/bin ]; then
+	mkdir ~/bin
+fi
+
+# Copy all files to new bin directory
+cp * ~/bin
+
+# Delete myself
+rm ~/bin/deploy

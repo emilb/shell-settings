@@ -1,0 +1,4 @@
+alias ls='ls -G'
+alias kali='ssh kali.local'
+alias home='ssh emil@home.emibre.com'
+alias lsd='ls -Glart'

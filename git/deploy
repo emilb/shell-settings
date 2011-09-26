@@ -1,0 +1,2 @@
+# Copy my git settings
+cp gitconfig ~/.gitconfig
