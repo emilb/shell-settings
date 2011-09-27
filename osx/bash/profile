@@ -57,7 +57,7 @@ export PATH=~/bin:/opt/local/bin:/opt/local/sbin:$PATH
 
 # MacPorts Bash shell command completion
 if [ -f /opt/local/etc/bash_completion ]; then
-    . /opt/local/etc/bash_completion
+    source /opt/local/etc/bash_completion
 fi
 
 # Extra environments

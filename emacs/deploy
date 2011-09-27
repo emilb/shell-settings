@@ -1,5 +1,7 @@
 # Copy emacs settings dir
-cp -R emacs.d ~/.emacs.d
+cp -R emacs.d/ ~/.emacs.d
 
 # Create auto-saves dir
-mkdir ~/.saves
+if [ ! -d ~/.saves ]; then
+	mkdir ~/.saves
+fi
