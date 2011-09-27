@@ -2,15 +2,15 @@
 # git settings
 ###
 function parse_git_deleted {
- [[ $(git status 2> /dev/null | grep deleted:) != "" ]] && echo "-"
+ [[ $(git status 2> /dev/null | grep deleted:) != "" ]] && echo -ne "\033[0;31m-\033[0m"
 }
 
 function parse_git_added {
- [[ $(git status 2> /dev/null | grep "Untracked files:") != "" ]] && echo '+'
+ [[ $(git status 2> /dev/null | grep "Untracked files:") != "" ]] && echo -ne "\033[0;34m+\033[0m"
 }
 
 function parse_git_modified {
- [[ $(git status 2> /dev/null | grep modified:) != "" ]] && echo "*"
+ [[ $(git status 2> /dev/null | grep modified:) != "" ]] && echo -ne "\033[0;33m*\033[0m"
 }
 
 function parse_git_dirty {
@@ -19,7 +19,7 @@ function parse_git_dirty {
 }
 
 function parse_git_branch {
- git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/[\1$(parse_git_dirty)]/"
+ git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/ [\1 $(parse_git_dirty)] /"
 }
 
 function eh {
@@ -41,6 +41,7 @@ function eh {
 # History settings
 export HISTCONTROL=erasedups
 export HISTSIZE=10000
+export HISTIGNORE="ls:cd:history:kali"
 shopt -s histappend
 
 # check the window size after each command and, if necessary,
@@ -62,12 +63,11 @@ fi
 
 # Extra environments
 if [ -f ~/.java_environment ]; then
-    source ~/.java_enviroment
+    source ~/.java_environment
 fi
 
 # Set Emacs mode in BASH
 set -o emacs
 
 export PATH=/opt/local/bin:/opt/local/sbin:~/bin:/usr/local/mysql/bin:/opt/local/libexec/git-core:$PATH
-export PS1='\n\[\033[0;36m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(parse_git_branch)\n\[\e[0;33m\][hist: \!] \$\[\e[0m\] '
-#export PS1='\u@local: ${PWD} $(parse_git_branch)$ '
+export PS1='\[\033]0;\u@\h: \w\007\]\n\[\033[0;36m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(parse_git_branch)\n\[\e[0;33m\][hist: \!] \$\033[0m '
