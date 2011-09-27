@@ -4,21 +4,48 @@
 function parse_git_deleted {
  [[ $(git status 2> /dev/null | grep deleted:) != "" ]] && echo "-"
 }
+
 function parse_git_added {
  [[ $(git status 2> /dev/null | grep "Untracked files:") != "" ]] && echo '+'
 }
+
 function parse_git_modified {
  [[ $(git status 2> /dev/null | grep modified:) != "" ]] && echo "*"
 }
+
 function parse_git_dirty {
  # [[ $(git status 2> /dev/null | tail -n1) != "nothing to commit (working directory clean)" ]] && echo "  "
  echo "$(parse_git_added)$(parse_git_modified)$(parse_git_deleted)"
 }
+
 function parse_git_branch {
  git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/[\1$(parse_git_dirty)]/"
 }
 
-export PS1='\u@local: ${PWD} $(parse_git_branch)$ '
+function eh {
+	echo "Commands to take advantage of bash's Emacs Mode:"
+	echo "  ctrl-a    Move cursor to beginning of line"
+	echo "  ctrl-e    Move cursor to end of line"
+	echo "  meta-b    Move cursor back one word"
+	echo "  meta-f    Move cursor forward one word"
+	echo "  ctrl-w    Cut the last word"
+	echo "  ctrl-u    Cut everything before the cursor"
+	echo "  ctrl-k    Cut everything after the cursor"
+	echo "  ctrl-y    Paste the last thing to be cut"
+	echo "  ctrl-_    Undo"
+	echo ""
+	echo "NOTE: ctrl- = hold control, meta- = hold meta (where meta is usually the alt or escape key)."
+	echo ""
+}
+
+# History settings
+export HISTCONTROL=erasedups
+export HISTSIZE=10000
+shopt -s histappend
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
 
 # Load bash aliases if they exist
 if [ -f ~/.bash_aliases ]; then
@@ -32,3 +59,15 @@ export PATH=~/bin:/opt/local/bin:/opt/local/sbin:$PATH
 if [ -f /opt/local/etc/bash_completion ]; then
     . /opt/local/etc/bash_completion
 fi
+
+# Extra environments
+if [ -f ~/.java_environment ]; then
+    source ~/.java_enviroment
+fi
+
+# Set Emacs mode in BASH
+set -o emacs
+
+export PATH=/opt/local/bin:/opt/local/sbin:~/bin:/usr/local/mysql/bin:/opt/local/libexec/git-core:$PATH
+export PS1='\n\[\033[0;36m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(parse_git_branch)\n\[\e[0;33m\][hist: \!] \$\[\e[0m\] '
+#export PS1='\u@local: ${PWD} $(parse_git_branch)$ '

@@ -1,0 +1,8 @@
+# Maven
+MAVEN_OPTS="-Xmx1024M -Xms512M -XX:PermSize=512M -XX:MaxPermSize=1024M"
+export MAVEN_OPTS
+
+# ANT
+
+# JAVA_HOME
+

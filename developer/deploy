@@ -1,0 +1,2 @@
+# Copy my java environment settings
+cp java_environment ~/.java_environment
