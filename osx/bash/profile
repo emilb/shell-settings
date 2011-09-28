@@ -53,6 +53,11 @@ if [ -f ~/.bash_aliases ]; then
     source ~/.bash_aliases
 fi
 
+# Load local aliases if they exist
+if [ -f ~/.local_bash_aliases ]; then
+    source ~/.local_bash_aliases
+fi
+
 # Update PATH for local bin and MacPorts
 export PATH=~/bin:/opt/local/bin:/opt/local/sbin:$PATH
 
