@@ -1,8 +1,7 @@
 alias ..='cd ..'
 alias ...='cd ../..'
-
-alias ls='ls -G'
-alias lsd='ls -Glart'
+alias ls='ls --color=auto'
+alias lsd='ls -r --sort=time --color=auto'
 
 alias kali='ssh kali.local'
 alias home='ssh emil@home.emibre.com'

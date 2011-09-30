@@ -23,20 +23,24 @@ function parse_git_branch {
 }
 
 function eh {
-	echo "Commands to take advantage of bash's Emacs Mode:"
-	echo "  ctrl-a    Move cursor to beginning of line"
-	echo "  ctrl-e    Move cursor to end of line"
-	echo "  meta-b    Move cursor back one word"
-	echo "  meta-f    Move cursor forward one word"
-	echo "  ctrl-w    Cut the last word"
-	echo "  ctrl-u    Cut everything before the cursor"
-	echo "  ctrl-k    Cut everything after the cursor"
-	echo "  ctrl-y    Paste the last thing to be cut"
-	echo "  ctrl-_    Undo"
-	echo ""
-	echo "NOTE: ctrl- = hold control, meta- = hold meta (where meta is usually the alt or escape key)."
-	echo ""
+    echo "Commands to take advantage of bash's Emacs Mode:"
+    echo "  ctrl-a    Move cursor to beginning of line"
+    echo "  ctrl-e    Move cursor to end of line"
+    echo "  meta-b    Move cursor back one word"
+    echo "  meta-f    Move cursor forward one word"
+    echo "  ctrl-w    Cut the last word"
+    echo "  ctrl-u    Cut everything before the cursor"
+    echo "  ctrl-k    Cut everything after the cursor"
+    echo "  ctrl-y    Paste the last thing to be cut"
+    echo "  ctrl-_    Undo"
+    echo ""
+    echo "NOTE: ctrl- = hold control, meta- = hold meta (where meta is usually the alt or escape key)."
+    echo ""
 }
+
+
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
 
 # History settings
 HISTCONTROL=erasedups:ignorespace
@@ -59,11 +63,21 @@ if [ -f ~/.local_bash_aliases ]; then
 fi
 
 # Update PATH for local bin and MacPorts
-export PATH=~/bin:/opt/local/bin:/opt/local/sbin:/usr/local/mysql/bin:/opt/local/libexec/git-core:$PATH
+export PATH=~/bin:$PATH
 
-# MacPorts Bash shell command completion
-if [ -f /opt/local/etc/bash_completion ]; then
-    source /opt/local/etc/bash_completion
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# set variable identifying the chroot you work in (used in the prompt below)
+if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+fi
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+    . /etc/bash_completion
 fi
 
 # Extra environments
