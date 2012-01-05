@@ -275,6 +275,26 @@ EOF
     service nginx start
 }
 
+function addWordPressPlugins {
+    # Category Cloud Widget
+
+
+    # Google XML Sitemaps
+
+
+    # SI CAPTCHA Anti-Spam
+
+
+    # WordPress Importer
+
+
+    # WP-Syntax
+
+
+    # WPTouch
+    
+}
+
 function setupFail2ban {
 
     echo "Setting up fail2ban"
