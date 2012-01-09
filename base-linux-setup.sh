@@ -64,6 +64,7 @@ function installPackages {
     echo "Installing openjdk-7-jdk ant ant-optional..."
     apt-get -qq -y install openjdk-7-jdk ant ant-optional > /dev/null
     echo "Setting Java 7 as default..."
+    #TODO: Fix update-java-alt differences for x64 and i386
     update-java-alternatives -s java-1.7.0-openjdk-amd64 > /dev/null
 
     echo "Installing tomcat7 tomcat7-common tomcat7-admin tomcat7-docs..."
@@ -92,7 +93,7 @@ function installPackages {
 #####################################################################
 # Disable DNS lookups on ssh login
 #####################################################################
-function disableDNSforSSH {
+function setupSSH {
     if ( grep 'UseDNS' /etc/ssh/sshd_config ); then
         echo "UseDNS already defined!"
     else
@@ -100,6 +101,8 @@ function disableDNSforSSH {
         echo "UseDNS no" | tee -a /etc/ssh/sshd_config
         service ssh restart
     fi
+
+    #TODO: PermitRootLogin no
 }
     
 function setupIPTables {
@@ -276,6 +279,7 @@ EOF
 }
 
 function addWordPressPlugins {
+    echo "Downloading WordPress plugins"
     # Category Cloud Widget
 
 
@@ -292,7 +296,7 @@ function addWordPressPlugins {
 
 
     # WPTouch
-    
+
 }
 
 function setupFail2ban {
@@ -394,6 +398,8 @@ EOF
 }
 
 function setupTomcat {
+    # TODO: Configure tomcat to use JDK7
+    
     echo "Adding user $USERNAME to tomcat-users"
     mv /etc/tomcat7/tomcat-users.xml /etc/tomcat7/tomcat-users.xml.org > /dev/null
     cat << EOF > /etc/tomcat7/tomcat-users.xml
@@ -604,6 +610,19 @@ test -x /usr/share/logwatch/scripts/logwatch.pl || exit 0
 EOF
 }
 
+function setupUser {
+
+    /bin/egrep  -i "^${USERNAME}" /etc/passwd
+    if [ $? -eq 0 ]; then
+       echo "User $USERNAME already exists"
+    else
+       echo "Adding user $USERNAME"
+       adduser $USERNAME
+       usermod -a -G sudo $USERNAME
+       passwd $USERNAME
+    fi
+}
+
 function setupBash {
     
     echo "Setting up bash profile"
@@ -748,11 +767,15 @@ EOF
     
 }
 
+function addCronJobWordPressBackup {
+    
+}
+
 #####################################################################
 # Configure
 #####################################################################
 installPackages
-disableDNSforSSH
+setupSSH
 setupHostName
 setupIPTables
 setupFastCGI
@@ -761,4 +784,6 @@ setupPostfix
 setupFail2ban
 setupTomcat
 setupLogwatch
+setupUser
 setupBash
+addCronJobWordPressBackup
