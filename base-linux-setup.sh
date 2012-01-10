@@ -242,8 +242,8 @@ EOF
     server {
         listen 80; #or change this to your public IP address eg 1.1.1.1:80
         server_name $WORDPRESS_FQDN;
-        access_log /var/log/nginx/wordpress.access_log;
-        error_log /var/log/nginx/wordpress.error_log;
+        access_log /var/log/nginx/wordpress.access.log;
+        error_log /var/log/nginx/wordpress.error.log;
 
         location / {
           root $WWW_DIR/wordpress;
@@ -434,8 +434,8 @@ EOF
 server {
     listen 80; #or change this to your public IP address eg 1.1.1.1:80
     server_name $TOMCAT_FQDN;
-    access_log /var/log/nginx/tomcat.access_log;
-    error_log /var/log/nginx/tomcat.error_log;
+    access_log /var/log/nginx/tomcat.access.log;
+    error_log /var/log/nginx/tomcat.error.log;
 
     location / {
         # give site more time to respond
@@ -610,7 +610,21 @@ test -x /usr/share/logwatch/scripts/logwatch.pl || exit 0
 EOF
     chmod +x /etc/cron.daily/00logwatch
 
-    TODO: Add nginx to logwatch: https://gist.github.com/1464809
+    echo "Setting up logwatch for nginx"
+    mv /usr/share/logwatch/default.conf/logfiles/http.conf /usr/share/logwatch/default.conf/logfiles/http.conf_org
+    cat << EOF > /usr/share/logwatch/default.conf/logfiles/http.conf
+LogFile = nginx/*access.log
+LogFile = nginx/*access.log.1
+
+Archive = nginx/*access.log.*.gz
+
+# Expand the repeats (actually just removes them now)
+*ExpandRepeats
+
+# Keep only the lines in the proper date range...
+*ApplyhttpDate
+
+EOF
 }
 
 function setupUser {
