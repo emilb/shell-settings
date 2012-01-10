@@ -242,8 +242,8 @@ EOF
     server {
         listen 80; #or change this to your public IP address eg 1.1.1.1:80
         server_name $WORDPRESS_FQDN;
-        access_log /var/log/wordpress.access_log;
-        error_log /var/log/wordpress.error_log;
+        access_log /var/log/nginx/wordpress.access_log;
+        error_log /var/log/nginx/wordpress.error_log;
 
         location / {
           root $WWW_DIR/wordpress;
@@ -399,7 +399,7 @@ EOF
 
 function setupTomcat {
     # TODO: Configure tomcat to use JDK7
-    
+
     echo "Adding user $USERNAME to tomcat-users"
     mv /etc/tomcat7/tomcat-users.xml /etc/tomcat7/tomcat-users.xml.org > /dev/null
     cat << EOF > /etc/tomcat7/tomcat-users.xml
@@ -434,8 +434,8 @@ EOF
 server {
     listen 80; #or change this to your public IP address eg 1.1.1.1:80
     server_name $TOMCAT_FQDN;
-    access_log /var/log/tomcat.access_log;
-    error_log /var/log/tomcat.error_log;
+    access_log /var/log/nginx/tomcat.access_log;
+    error_log /var/log/nginx/tomcat.error_log;
 
     location / {
         # give site more time to respond
@@ -608,6 +608,9 @@ test -x /usr/share/logwatch/scripts/logwatch.pl || exit 0
 #execute
 /usr/sbin/logwatch --mailto $EMAIL
 EOF
+    chmod +x /etc/cron.daily/00logwatch
+
+    TODO: Add nginx to logwatch: https://gist.github.com/1464809
 }
 
 function setupUser {
